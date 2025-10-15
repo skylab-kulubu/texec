@@ -1,6 +1,12 @@
-import os
+#!/usr/bin/python
+
+import signal, os
 from timeit import default_timer as timer
 from subprocess import run as execute
+
+# For graceful exit, breaks some loops without this
+def handler(signum, frame):
+  os._exit(os.EX_OK)
 
 def get_time_limit():
   print("Write time limit as seconds for checking:")
@@ -48,6 +54,8 @@ def get_redaction():
       print("Please write \"yes\" or \"no\".")
 
 if __name__ == "__main__":
+  signal.signal(signal.SIGINT, handler)
+
   limit = get_time_limit()
   inputs = get_inputs()
   command = get_command()
